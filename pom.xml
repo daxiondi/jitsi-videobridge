@@ -24,11 +24,11 @@
 
     <properties>
         <jetty.version>9.4.15.v20190215</jetty.version>
-        <kotlin.version>1.3.71</kotlin.version>
+        <kotlin.version>1.3.72</kotlin.version>
+        <kotest.version>4.1.3</kotest.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <smack.version>4.2.4-47d17fc</smack.version>
-        <jicoco.version>1.1-36-gecd3e61</jicoco.version>
-        <jitsi.utils.version>1.0-54-ge0059ef</jitsi.utils.version>
+        <jicoco.version>1.1-45-g78e48cb</jicoco.version>
+        <jitsi.utils.version>1.0-58-gaa5a28f</jitsi.utils.version>
         <maven-shade-plugin.version>3.2.2</maven-shade-plugin.version>
         <spotbugs.version>4.0.1</spotbugs.version>
         <jersey.version>2.30.1</jersey.version>
@@ -36,7 +36,7 @@
 
     <modules>
         <module>jvb-api</module>
-        <module>jvb_pom.xml</module>
+        <module>jvb</module>
     </modules>
 
     <dependencyManagement>
@@ -48,7 +48,12 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jicoco-kotlin</artifactId>
+                <artifactId>jicoco-test-kotlin</artifactId>
+                <version>${jicoco.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>jicoco-config</artifactId>
                 <version>${jicoco.version}</version>
             </dependency>
             <dependency>
@@ -58,8 +63,8 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>jitsi-utils-kotlin</artifactId>
-                <version>${jitsi.utils.version}</version>
+                <artifactId>jitsi-metaconfig</artifactId>
+                <version>30cdd3e22b</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -69,12 +74,12 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>rtp</artifactId>
-                <version>1.0-46-gd3742d1</version>
+                <version>1.0-49-gb097255</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>jitsi-media-transform</artifactId>
-                <version>1.0-164-g031788f</version>
+                <version>1.0-173-g2e98d2d</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
@@ -88,5 +93,11 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
 </project>
