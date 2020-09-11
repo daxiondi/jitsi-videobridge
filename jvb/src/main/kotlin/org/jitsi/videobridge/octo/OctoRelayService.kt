@@ -21,14 +21,12 @@ import org.jitsi.videobridge.octo.config.OctoConfig.Companion.config
 import org.jitsi.videobridge.transport.octo.BridgeOctoTransport
 import org.jitsi.videobridge.transport.udp.UdpTransport
 import org.jitsi.videobridge.util.TaskPools
-import org.osgi.framework.BundleActivator
-import org.osgi.framework.BundleContext
 import java.net.SocketAddress
 import java.net.SocketException
 import java.net.UnknownHostException
 import java.time.Instant
 
-class OctoRelayService : BundleActivator {
+class OctoRelayService {
     /**
      * The [UdpTransport] used to send and receive Octo data
      */
@@ -40,7 +38,7 @@ class OctoRelayService : BundleActivator {
     var bridgeOctoTransport: BridgeOctoTransport? = null
         private set
 
-    override fun start(bundleContext: BundleContext) {
+    fun start() {
         if (!config.enabled) {
             logger.info("Octo relay is disabled")
             return
@@ -78,35 +76,30 @@ class OctoRelayService : BundleActivator {
             }
         }
         TaskPools.IO_POOL.submit { udpTransport!!.startReadingData() }
-
-        bundleContext.registerService(
-            OctoRelayService::class.java.name,
-            this,
-            null
-        )
     }
 
-    override fun stop(context: BundleContext?) {
+    fun stop() {
+        logger.info("Stopping")
         udpTransport?.stop()
         bridgeOctoTransport?.stop()
     }
 
     fun getStats(): Stats {
-        val octoUdpTransportStats = udpTransport!!.getStats()
-        val octoTransportStats = bridgeOctoTransport!!.getStats()
+        val octoUdpTransportStats = udpTransport?.getStats()
+        val octoTransportStats = bridgeOctoTransport?.getStats()
         return Stats(
-            bytesReceived = octoUdpTransportStats.bytesReceived,
-            bytesSent = octoUdpTransportStats.bytesSent,
-            packetsReceived = octoUdpTransportStats.packetsReceived,
-            packetsSent = octoUdpTransportStats.packetsSent,
-            receiveBitrate = octoUdpTransportStats.receiveBitRate,
-            receivePacketRate = octoUdpTransportStats.receivePacketRate,
-            packetsDropped = octoUdpTransportStats.incomingPacketsDropped +
-                    octoTransportStats.numInvalidPackets +
-                    octoTransportStats.numIncomingDroppedNoHandler,
-            sendBitrate = octoUdpTransportStats.sendBitRate,
-            sendPacketRate = octoUdpTransportStats.sendPacketRate,
-            relayId = bridgeOctoTransport!!.relayId
+            bytesReceived = octoUdpTransportStats?.bytesReceived ?: 0,
+            bytesSent = octoUdpTransportStats?.bytesSent ?: 0,
+            packetsReceived = octoUdpTransportStats?.packetsReceived ?: 0,
+            packetsSent = octoUdpTransportStats?.packetsSent ?: 0,
+            receiveBitrate = octoUdpTransportStats?.receiveBitRate ?: 0,
+            receivePacketRate = octoUdpTransportStats?.receivePacketRate ?: 0,
+            packetsDropped = (octoUdpTransportStats?.incomingPacketsDropped ?: 0) +
+                    (octoTransportStats?.numInvalidPackets ?: 0) +
+                    (octoTransportStats?.numIncomingDroppedNoHandler ?: 0),
+            sendBitrate = octoUdpTransportStats?.sendBitRate ?: 0,
+            sendPacketRate = octoUdpTransportStats?.sendPacketRate ?: 0,
+            relayId = bridgeOctoTransport?.relayId ?: "no relay ID"
         )
     }
 

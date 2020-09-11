@@ -36,27 +36,28 @@ import static org.mockito.Mockito.*;
 
 public class MucClientTest extends JerseyTest
 {
-    protected ClientConnectionProvider clientConnectionProvider;
+    protected ClientConnectionImplSupplier clientConnectionImplSupplier;
     protected ClientConnectionImpl clientConnection;
     protected static final String BASE_URL = "/colibri/muc-client";
 
     @Override
     protected Application configure()
     {
-        clientConnectionProvider = mock(ClientConnectionProvider.class);
+        clientConnectionImplSupplier = mock(ClientConnectionImplSupplier.class);
         clientConnection = mock(ClientConnectionImpl.class);
-        when(clientConnectionProvider.get()).thenReturn(clientConnection);
+        when(clientConnectionImplSupplier.get()).thenReturn(clientConnection);
 
         enable(TestProperties.LOG_TRAFFIC);
         enable(TestProperties.DUMP_ENTITY);
         return new ResourceConfig() {
             {
-                register(new MockBinder<>(clientConnectionProvider, ClientConnectionProvider.class));
+                register(new MockBinder<>(clientConnectionImplSupplier, ClientConnectionImplSupplier.class));
                 register(MucClient.class);
             }
         };
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testAddMuc()
     {
@@ -77,6 +78,7 @@ public class MucClientTest extends JerseyTest
         assertEquals(json, jsonConfigCaptor.getValue());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testAddMucFailure()
     {
@@ -93,6 +95,7 @@ public class MucClientTest extends JerseyTest
         assertEquals(HttpStatus.BAD_REQUEST_400, resp.getStatus());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testRemoveMuc()
     {
@@ -108,6 +111,7 @@ public class MucClientTest extends JerseyTest
         assertEquals(json, jsonConfigCaptor.getValue());
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testRemoveMucFailure()
     {
